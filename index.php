@@ -1,19 +1,44 @@
-<?php
-    $con = mysqli_connect("localhost", "root", "", "socialmedia");
-    if(mysqli_connect_errno()){
-        echo "Failed to connect:" . mysqli_connect_errno();
-    }    
-?>
+<?php 
+include('includes/header.php');
+include('includes/classes/User.php');
+include('includes/classes/Post.php');
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social Media</title>
-</head>
-<body>
-    
+if(isset($_POST['post'])){
+	$post = new Post($con, $userLoggedIn);
+	$post->submitPost($_POST['post_text'], 'none');
+	header('Location:index.php');
+}
+?>
+		<!-- User details from the home page -->
+		<div class="user_details column">
+			<a href="<?php echo $userLoggedIn; ?>"><img src="<?php echo $user['profile_pic']; ?>"></a>
+			<div class="user_details_left_right">
+				<a href="<?php echo $userLoggedIn; ?>">
+					<?php 
+						echo $user['firstname'] . " " . $user['lastname'];
+					 ?>
+				</a>
+				<br>
+				<?php 
+					echo "Posts: ". $user['num_posts'] . "<br>";
+					echo "Likes: " . $user['num_likes'];
+				 ?>
+			</div>
+		</div>
+
+		<div class="main_column column">
+			<form class="post_form" action="index.php" method="POST">
+				<textarea name="post_text" id="post_text" placeholder="Got something to say!"></textarea>
+				<input type="submit" name="post" id="post_button" value="Post">
+			</form>
+
+			<?php
+				$user_obj = new User($con, $userLoggedIn);
+				echo $user_obj->getFirstAndLastName();
+
+			?>
+		</div>
+
+	</div>
 </body>
-</html>
+</html>	
